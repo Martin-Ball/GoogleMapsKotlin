@@ -2,6 +2,7 @@ package com.martin.googlemapskotlin
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color.red
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,8 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        createMarker()
+        //createMarker()
+        createPolylines()
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
         enableLocation()
@@ -54,6 +55,45 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             4000,
             null
         )
+    }
+
+    private fun createPolylines(){
+
+        //https://geojson.io/#map=2/20.0/0.0
+
+      val polylineOptions = PolylineOptions()
+          .add(LatLng(40.419173113350965,-3.705976009368897))
+          .add(LatLng( 40.4150807746539, -3.706072568893432))
+          .add(LatLng( 40.41517062907432, -3.7012016773223873))
+          .add(LatLng( 40.41713105928677, -3.7037122249603267))
+          .add(LatLng( 40.41926296230622,  -3.701287508010864))
+          .add(LatLng( 40.419173113350965, -3.7048280239105225))
+          .width(15f)
+          .color(ContextCompat.getColor(this, R.color.kotlin))
+
+      val polyline = map.addPolyline(polylineOptions)
+
+        polyline.startCap = RoundCap()
+        polyline.endCap = CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.dog))
+
+      val pattern = listOf(
+          Dot(), Gap(10f), Dash(50f), Gap(10f)
+      )
+        polyline.pattern = pattern
+
+      polyline.isClickable = true
+
+      map.setOnPolylineClickListener { polyline -> changeColor(polyline) }
+    }
+
+    fun changeColor(polyline: Polyline){
+        val color:Int = (0..3).random()
+        when(color){
+            0 -> polyline.color = ContextCompat.getColor(this, R.color.red)
+            1 -> polyline.color = ContextCompat.getColor(this, R.color.blue)
+            2 -> polyline.color = ContextCompat.getColor(this, R.color.yellow)
+            3 -> polyline.color = ContextCompat.getColor(this, R.color.green)
+        }
     }
 
     private fun isLocationPermissionGranted() = ContextCompat.checkSelfPermission(

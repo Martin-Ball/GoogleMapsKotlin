@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="kotlin">#9A17B8</color>
+
+    <color name="red">#FF0303</color>
+    <color name="blue">#0307FF</color>
+    <color name="yellow">#F6D503</color>
+    <color name="green">#14FF03</color>
 </resources>
